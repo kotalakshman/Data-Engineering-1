@@ -9,17 +9,17 @@ steps:
   args:
   - '-c'
   - |
-    dsl-compile --py $_PIPELINE_DSL --output $_PIPELINE_PACKAGE
+    dsl-compile --py pipeline.py --output pipeline.yaml
   
   
  # Upload the pipeline
-- name: 'gcr.io/$PROJECT_ID/kfp-cli'
+- name: 'gcr.io/test-servers-349208/mlops'
   args:
   - '-c'
   - |
-    kfp --endpoint $_ENDPOINT pipeline upload -p ${_PIPELINE_NAME}_$TAG_NAME $_PIPELINE_PACKAGE
-  dir: $_PIPELINE_FOLDER/pipeline
+    kfp --endpoint $_ENDPOINT pipeline upload -p farmer_mlops pipeline.yaml
+  
 
 
 # Push the images to Container Registry 
-images: ['gcr.io/$PROJECT_ID/$_TRAINER_IMAGE_NAME:$TAG_NAME', 'gcr.io/$PROJECT_ID/$_BASE_IMAGE_NAME:$TAG_NAME']
+images: ['gcr.io/test-servers-349208/mlops:latest']
