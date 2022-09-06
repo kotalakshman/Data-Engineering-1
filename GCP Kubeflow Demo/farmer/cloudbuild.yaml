@@ -1,0 +1,25 @@
+steps:
+# Build the trainer image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/test-servers-349208/mlops:latest', '.']
+  
+  
+# Compile the pipeline
+- name: 'gcr.io/$PROJECT_ID/kfp-cli'
+  args:
+  - '-c'
+  - |
+    dsl-compile --py $_PIPELINE_DSL --output $_PIPELINE_PACKAGE
+  
+  
+ # Upload the pipeline
+- name: 'gcr.io/$PROJECT_ID/kfp-cli'
+  args:
+  - '-c'
+  - |
+    kfp --endpoint $_ENDPOINT pipeline upload -p ${_PIPELINE_NAME}_$TAG_NAME $_PIPELINE_PACKAGE
+  dir: $_PIPELINE_FOLDER/pipeline
+
+
+# Push the images to Container Registry 
+images: ['gcr.io/$PROJECT_ID/$_TRAINER_IMAGE_NAME:$TAG_NAME', 'gcr.io/$PROJECT_ID/$_BASE_IMAGE_NAME:$TAG_NAME']
