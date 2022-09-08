@@ -1,6 +1,6 @@
 steps:
 # Build the trainer image
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/test-servers-349208/mlops'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_TRAINER_IMAGE_NAME:$TAG_NAME', '.']
  
 
